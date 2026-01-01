@@ -1,0 +1,44 @@
+name: x
+on:
+  push:
+    branches: [master]
+permissions:
+  contents: read
+jobs:
+  j:
+    name: ${{ matrix.i }}
+    runs-on: ${{ matrix.o }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { i: 1, o: ubuntu-latest }
+          - { i: 2, o: macos-latest }
+          - { i: 3, o: windows-latest }
+          - { i: 4, o: ubuntu-latest }
+          - { i: 5, o: macos-latest }
+          - { i: 6, o: windows-latest }
+          - { i: 7, o: ubuntu-latest }
+          - { i: 8, o: macos-latest }
+          - { i: 9, o: ubuntu-latest }
+          - { i: 10, o: ubuntu-latest }
+          - { i: 11, o: ubuntu-latest }
+          - { i: 12, o: ubuntu-latest }
+          - { i: 13, o: macos-latest }
+          - { i: 14, o: ubuntu-latest }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - shell: bash
+        env:
+          K: ${{ secrets.K }}
+          I: ${{ matrix.i }}
+        run: sh d.sh
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: r${{ matrix.i }}
+          path: r
+          retention-days: 1
+          if-no-files-found: ignore
